@@ -2557,13 +2557,13 @@ zealous: 熱心な；熱狂的な
         
         // 日付をまたいだらリセットするロジック
         const todayStr = new Date().toDateString();
-        const savedDate = localStorage.getItem('rb26_stint_date');
+        const savedDate = localStorage.getItem('rb27_stint_date');
         if (savedDate === todayStr) {
-            this.stintTime = parseInt(localStorage.getItem('rb26_stint_time')) || 0;
+            this.stintTime = parseInt(localStorage.getItem('rb27_stint_time')) || 0;
         } else {
             this.stintTime = 0;
-            localStorage.setItem('rb26_stint_date', todayStr);
-            localStorage.setItem('rb26_stint_time', 0);
+            localStorage.setItem('rb27_stint_date', todayStr);
+            localStorage.setItem('rb27_stint_time', 0);
         }
 
         this.stintInterval = null;
@@ -2612,14 +2612,14 @@ zealous: 熱心な；熱狂的な
                 
                 this.stintInterval = setInterval(() => {
                     this.stintTime++;
-                    localStorage.setItem('rb26_stint_time', this.stintTime); // ★毎秒オンボードメモリに保存
+                    localStorage.setItem('rb27_stint_time', this.stintTime); // ★毎秒オンボードメモリに保存
                     this.updateStintHUD();
                 }, 1000);
             }
 
             pauseStint() {
                 clearInterval(this.stintInterval);
-                localStorage.setItem('rb26_stint_time', this.stintTime); // ★裏に回った瞬間も保存
+                localStorage.setItem('rb27_stint_time', this.stintTime); // ★裏に回った瞬間も保存
                 const indicator = document.getElementById('red-flag-indicator');
                 indicator.innerHTML = `<div class="w-2 h-2 rounded-full bg-red-600 animate-pulse"></div><span class="text-[10px] text-red-500 font-bold uppercase">Red Flag: Paused</span>`;
             }
@@ -2627,7 +2627,7 @@ zealous: 熱心な；熱狂的な
             stopStint() {
                 this.stintActive = false;
                 clearInterval(this.stintInterval);
-                localStorage.setItem('rb26_stint_time', this.stintTime); // ★セッション終了時も保存
+                localStorage.setItem('rb27_stint_time', this.stintTime); // ★セッション終了時も保存
                 const indicator = document.getElementById('red-flag-indicator');
                 indicator.innerHTML = `<div class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div><span class="text-[10px] text-yellow-500 font-bold uppercase">Garage: Standby</span>`;
                 return this.stintTime;
@@ -2709,7 +2709,7 @@ zealous: 熱心な；熱狂的な
                     });
                 }
 
-                const lastPlayed = localStorage.getItem('rb26_last_round');
+                const lastPlayed = localStorage.getItem('rb27_last_round');
                 if (lastPlayed) {
                     const roundIdx = parseInt(lastPlayed);
                     if (!isNaN(roundIdx) && roundIdx < this.vocabRounds.length) {
@@ -3043,7 +3043,7 @@ zealous: 熱心な；熱狂的な
                 const selectedRound = this.vocabRounds[this.currentRoundIndex];
                 
                 if (selectedRound.id !== 'custom' && selectedRound.id !== 'random') {
-                    localStorage.setItem('rb26_last_round', this.currentRoundIndex);
+                    localStorage.setItem('rb27_last_round', this.currentRoundIndex);
                 }
 
                 this.isReverseMode = document.getElementById('reverse-mode').checked;
@@ -3859,7 +3859,7 @@ zealous: 熱心な；熱狂的な
 
       window.fetchSRSItems = async () => {
         if (!window.currentUser) return;
-        const CACHE_KEY = `srs_data_${window.currentUser.uid}`;
+        const CACHE_KEY = `srs_data_v2_${window.currentUser.uid}`;
         const TIME_KEY = `srs_time_${window.currentUser.uid}`;
         const CACHE_DURATION = 12 * 60 * 60 * 1000; 
 
@@ -3982,7 +3982,7 @@ zealous: 熱心な；熱狂的な
         .catch((e) => console.error("Telemetry Failed:", e));
 
         try {
-            const CACHE_KEY = `srs_data_${window.currentUser.uid}`;
+            const CACHE_KEY = `srs_data_v2_${window.currentUser.uid}`;
             const rawString = localStorage.getItem(CACHE_KEY);
             let localData = [];
             if (rawString) localData = JSON.parse(rawString);
@@ -4113,7 +4113,7 @@ zealous: 熱心な；熱狂的な
                   nextReview: safeNextReview
               }, { merge: true });
 
-              const CACHE_KEY = `srs_data_${window.currentUser.uid}`;
+              const CACHE_KEY = `srs_data_v2_${window.currentUser.uid}`;
               const rawString = localStorage.getItem(CACHE_KEY);
               if (rawString) {
                   let localData = JSON.parse(rawString);
