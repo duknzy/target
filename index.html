@@ -3870,7 +3870,7 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
 
                  let dataSrc = this.masterList.length > 0 ? this.masterList : (this.allMistakes || []);
                  
-                 let merged = dataSrc.map((item, idx) => {
+                let merged = dataSrc.map((item, idx) => {
                      const srs = this.allMistakes.find(m => m.word === item.w || m.w === item.w);
                      return { 
                          w: item.w || item.word, 
@@ -3878,6 +3878,7 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                          isCustom: item.isCustom || false,
                          originalId: item.originalId || null,
                          customId: item.customId || null,
+                         firestoreId: item.firestoreId || null, // ←★俺がこれを1行入れ忘れていた！！
                          id: idx, 
                          srs: srs || null 
                      };
