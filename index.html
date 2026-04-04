@@ -10,7 +10,7 @@
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#0b0e14">
     
-    <title>RB Hybrid Learning System</title>
+    <title>RB Hybrid Learning System (Target Spec)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -38,6 +38,8 @@
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
         }
 
         body {
@@ -210,6 +212,9 @@
         }
 
         @media only screen and (max-width: 768px) {
+            html {
+                font-size: clamp(12px, 3.5vw, 16px);
+            }
             .carbon-bg {
                 background-attachment: scroll; 
                 min-height: 100vh;
@@ -428,9 +433,15 @@
                         <div class="pt-4 border-t border-gray-700 relative">
                             <input type="text" id="search-input" placeholder="Quick Scan (Search)..." class="w-full bg-black text-white p-3 rounded-lg border border-gray-700 focus:border-red-500 outline-none font-mono text-sm mb-3 placeholder-gray-600">
                              <div id="search-results" class="hidden absolute top-16 left-0 right-0 bg-gray-900 border border-gray-700 rounded-lg shadow-2xl max-h-48 overflow-y-auto z-50"></div>
-                            <button onclick="quiz.openWordBook()" class="w-full bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600 py-3 rounded-lg font-bold transition-all uppercase text-xs flex items-center justify-center gap-2">
-                                <span>📁</span> OPEN DATA CENTER
-                            </button>
+                            
+                            <div class="flex gap-2">
+                                <button onclick="quiz.openWordBook()" class="flex-1 bg-gray-700 hover:bg-gray-600 text-gray-200 border border-gray-600 py-3 rounded-lg font-bold transition-all uppercase text-xs flex items-center justify-center gap-2 shadow-lg">
+                                    <span>📁</span> DATA CENTER
+                                </button>
+                                <button onclick="document.getElementById('custom-word-modal').classList.remove('hidden')" class="flex-1 bg-red-900/40 hover:bg-red-800/80 text-white border border-red-800 py-3 rounded-lg font-bold transition-all uppercase text-xs flex items-center justify-center gap-2 shadow-lg">
+                                    <span>🛠️</span> R&D (ADD WORD)
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -454,7 +465,12 @@
         <div id="wordbook-screen" class="hidden race-card p-6 rounded-2xl text-center border-t-4 border-yellow-500 h-[90%] my-auto z-50 flex flex-col absolute inset-4">
             <div class="flex justify-between items-center mb-4 flex-shrink-0">
                 <h2 class="f1-font text-2xl font-bold text-yellow-500 tracking-widest">DATA CENTER</h2>
-                <button onclick="quiz.closeOverlay('wordbook-screen')" class="text-gray-400 active:text-white text-3xl p-2 hover:text-white transition-colors">&times;</button>
+                <div class="flex items-center gap-2">
+                    <button onclick="document.getElementById('custom-word-modal').classList.remove('hidden')" class="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded text-xs font-bold f1-font transition-all active:scale-95 border border-red-700 shadow-lg shadow-red-900/50">
+                        + NEW
+                    </button>
+                    <button onclick="quiz.closeOverlay('wordbook-screen')" class="text-gray-400 active:text-white text-3xl p-2 hover:text-white transition-colors leading-none">&times;</button>
+                </div>
             </div>
             <div class="flex flex-wrap gap-2 mb-2 flex-shrink-0 justify-center items-center">
                 <div class="bg-gray-900 p-2 rounded border border-gray-700 flex items-center gap-2">
@@ -573,6 +589,31 @@
                <button id="next-round-btn" onclick="quiz.returnToGrid()" class="f1-font bg-red-600 hover:bg-red-500 text-white py-4 rounded-xl font-bold transition-all shadow-lg shadow-red-900/50 uppercase text-sm tracking-wider">Next Sector</button>
             </div>
         </div>
+
+        <div id="custom-word-modal" class="hidden fixed inset-0 z-[200] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="race-card p-6 rounded-2xl w-full max-w-md border border-red-600/50 shadow-[0_0_30px_rgba(225,6,0,0.2)] animate-slide-in relative">
+                <button onclick="document.getElementById('custom-word-modal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl leading-none transition-colors">&times;</button>
+                
+                <h3 class="f1-font text-2xl font-bold text-red-500 mb-2 tracking-widest">R&D FACILITY</h3>
+                <p class="text-[10px] text-gray-400 uppercase mb-6 tracking-widest border-b border-gray-700 pb-2">Craft Custom Components</p>
+
+                <div class="space-y-4 text-left">
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase font-bold block mb-1">Target Word (Component)</label>
+                        <input type="text" id="modal-word-input" placeholder="ex: downforce" class="w-full bg-gray-900 text-white p-3 rounded-lg border border-gray-700 focus:border-red-500 outline-none font-mono text-sm">
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-500 uppercase font-bold block mb-1">Meaning (Spec)</label>
+                        <input type="text" id="modal-meaning-input" placeholder="ex: ダウンフォース" class="w-full bg-gray-900 text-white p-3 rounded-lg border border-gray-700 focus:border-red-500 outline-none text-sm">
+                    </div>
+                    
+                    <button onclick="quiz.addCustomWord(event)" id="modal-save-btn" class="w-full bg-red-600 hover:bg-red-500 text-white py-4 rounded-xl font-bold transition-all uppercase text-sm tracking-widest shadow-lg shadow-red-900/50 mt-4 active:scale-95 border border-red-700">
+                        INSTALL PART
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -2632,6 +2673,12 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
             }
 
             speak(text) {
+                const targetData = this.masterList.find(item => item.w === text || item.m === text);
+                if (targetData && targetData.isCustom) {
+                    console.log("[RADIO] Custom part detected. Audio muted.");
+                    return;
+                }
+
                 if (!this.synth || this.englishVoices.length === 0) {
                     console.warn("[TTS] Engine warming up...");
                     return; 
@@ -2655,6 +2702,7 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                 this.masterList = [];
                 
                 const citeRegex = /\[(?:cite:\s*)?\d+\]/g;
+                let idCounter = 1;
                 
                 lines.forEach(line => {
                     const parts = line.split(/[|｜]/).map(s => s.trim());
@@ -2673,7 +2721,8 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                             w: mainPart.substring(0, sep).trim(), 
                             m: mainPart.substring(sep + 1).trim(),
                             ex: parts[1] || "", 
-                            exTr: parts[2] || "" 
+                            exTr: parts[2] || "",
+                            originalId: idCounter++ 
                         });
                     }
                 });
@@ -2686,6 +2735,16 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
             generateRounds() {
                 const wordCopy = [...this.masterList]; 
                 this.vocabRounds = [];
+
+                const customWords = this.masterList.filter(item => item.isCustom);
+                if (customWords.length > 0) {
+                    this.vocabRounds.push({ 
+                        id: 'custom_only', 
+                        name: `🛠️ R&D PARTS (${customWords.length} Qs)`, 
+                        words: customWords 
+                    });
+                }
+
                 let roundNum = 1;
                 let currentWordIndex = 1; 
                 while (wordCopy.length > 0) {
@@ -2784,17 +2843,92 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                         .slice(0, 50);
                     if (hits.length > 0) {
                         results.classList.remove('hidden');
-                        results.innerHTML = hits.map(h => `
+                        results.innerHTML = hits.map(h => {
+                            let displayId = h.isCustom ? `C-${h.customId}` : `No.${h.originalId || h.i}`;
+                            return `
                             <div onclick="quiz.speak('${h.w.replace(/'/g, "\\'")}')" class="p-3 border-b border-gray-800 active:bg-gray-800 cursor-pointer flex justify-between items-center group hover:bg-white/5 transition-colors">
-                                <div class="text-left"><div class="flex items-baseline gap-2"><span class="text-[10px] text-yellow-500 font-mono opacity-70">No.${h.i}</span><span class="text-red-400 font-bold text-xs f1-font">${h.w}</span></div><span class="text-gray-400 text-[10px] pl-1">${h.m}</span></div>
+                                <div class="text-left"><div class="flex items-baseline gap-2"><span class="text-[10px] text-yellow-500 font-mono opacity-70">${displayId}</span><span class="text-red-400 font-bold text-xs f1-font">${h.w}</span></div><span class="text-gray-400 text-[10px] pl-1">${h.m}</span></div>
                                 <button class="text-[8px] bg-gray-700 text-white px-2 py-1 rounded-full uppercase">Listen</button>
-                            </div>`).join('');
+                            </div>`
+                        }).join('');
                     } else {
                         results.classList.remove('hidden');
                         results.innerHTML = `<div class="p-3 text-gray-500 text-[10px] text-center">NO DATA</div>`;
                     }
                 });
                 document.addEventListener('click', (e) => { if (!input.contains(e.target) && !results.contains(e.target)) results.classList.add('hidden'); });
+            }
+            
+            async addCustomWord(event) {
+                if (!window.currentUser) {
+                    alert("Pit lane closed. ログインしていないと追加できないぞ。");
+                    return;
+                }
+                const wordInput = document.getElementById('modal-word-input');
+                const meaningInput = document.getElementById('modal-meaning-input');
+                const w = wordInput.value.trim();
+                const m = meaningInput.value.trim();
+
+                if (!w || !m) {
+                    alert("Telemetry error: データが足りないぞ。");
+                    return;
+                }
+
+                const dbWordData = {
+                    w: w,
+                    m: m,
+                    ex: "[Custom Data] 君のオリジナルパーツだ",
+                    exTr: "",
+                    timestamp: Date.now()
+                };
+
+                const btn = document.getElementById('modal-save-btn');
+                const oldText = btn.innerText;
+                btn.innerText = "INSTALLING...";
+                btn.disabled = true;
+
+                try {
+                    if (window.saveCustomWordToFirestore) {
+                        await window.saveCustomWordToFirestore(dbWordData);
+                    }
+
+                    const currentCustomCount = this.masterList.filter(item => item.isCustom).length;
+                    const customWord = {
+                        ...dbWordData,
+                        isCustom: true,
+                        customId: currentCustomCount + 1
+                    };
+
+                    this.masterList.unshift(customWord);
+                    
+                    this.generateRounds();
+                    this.initUI();
+                    
+                    const wbScreen = document.getElementById('wordbook-screen');
+                    if (wbScreen && !wbScreen.classList.contains('hidden')) {
+                        this.renderWordBook();
+                    }
+
+                    wordInput.value = '';
+                    meaningInput.value = '';
+                    btn.innerText = "INSTALLED!";
+                    btn.classList.replace('bg-red-600', 'bg-green-600');
+                    btn.classList.replace('border-red-700', 'border-green-700');
+                    
+                    setTimeout(() => {
+                        btn.innerText = oldText;
+                        btn.classList.replace('bg-green-600', 'bg-red-600');
+                        btn.classList.replace('border-green-700', 'border-red-700');
+                        btn.disabled = false;
+                        document.getElementById('custom-word-modal').classList.add('hidden');
+                    }, 1000);
+
+                } catch (e) {
+                    console.error("Failed to add custom word", e);
+                    alert("Engine failure: 保存に失敗した。");
+                    btn.innerText = oldText;
+                    btn.disabled = false;
+                }
             }
 
             createCustomRound() {
@@ -3143,7 +3277,6 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                  } else {
                      targetDisplay.innerText = q.qText;
                      
-                     // ★ q.ex の条件に && !this.isReverseMode を追加
                      if (q.ex && !this.isReverseMode) {
                         exText.className = "text-2xl md:text-4xl lg:text-5xl text-gray-100 f1-font italic text-center leading-tight tracking-tight drop-shadow-lg";
                         exText.innerHTML = `
@@ -3565,10 +3698,13 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                 const currentRound = this.vocabRounds[this.currentRoundIndex];
 
                 if (!this.isPitStopMode) {
-                    if (currentRound && currentRound.id === 'random') {
+                    if (currentRound && (currentRound.id === 'random' || currentRound.id === 'flagged')) {
                         nextBtn.classList.remove('hidden');
                         nextBtn.innerText = "AGAIN (SAME SETUP)"; 
-                        nextBtn.onclick = () => { this.createRandomRound(); };
+                        nextBtn.onclick = () => { 
+                            if (currentRound.id === 'random') this.createRandomRound();
+                            else this.createFlaggedRound();
+                        };
                     } else if (this.currentRoundIndex + 1 < this.vocabRounds.length) {
                         nextBtn.classList.remove('hidden');
                         nextBtn.innerText = "NEXT SECTOR";
@@ -3709,6 +3845,10 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                      this.bookmarkedFilter = '24h';
                      document.getElementById('wb-filter-btn').innerText = "⏱️ 24H";
                      document.getElementById('wb-filter-btn').className = "bg-purple-900/80 text-white px-3 rounded border border-purple-500 text-xs font-bold uppercase hover:bg-purple-800 transition-colors";
+                 } else if (this.bookmarkedFilter === '24h') {
+                     this.bookmarkedFilter = 'custom';
+                     document.getElementById('wb-filter-btn').innerText = "🛠️ R&D";
+                     document.getElementById('wb-filter-btn').className = "bg-blue-900/80 text-white px-3 rounded border border-blue-500 text-xs font-bold uppercase hover:bg-blue-800 transition-colors";
                  } else {
                      this.bookmarkedFilter = 'all';
                      document.getElementById('wb-filter-btn').innerText = "ALL";
@@ -3729,7 +3869,15 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                  
                  let merged = dataSrc.map((item, idx) => {
                      const srs = this.allMistakes.find(m => m.word === item.w || m.w === item.w);
-                     return { w: item.w || item.word, m: item.m || item.meaning, id: idx, srs: srs || null };
+                     return { 
+                         w: item.w || item.word, 
+                         m: item.m || item.meaning, 
+                         isCustom: item.isCustom || false,
+                         originalId: item.originalId || null,
+                         customId: item.customId || null,
+                         id: idx, 
+                         srs: srs || null 
+                     };
                  });
 
                  const filtered = merged.filter(item => {
@@ -3748,6 +3896,7 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                      if (this.bookmarkedFilter === 'red') matchBook = isRed;
                      if (this.bookmarkedFilter === 'yellow') matchBook = isYellow;
                      if (this.bookmarkedFilter === '24h') matchBook = is24hMiss; 
+                     if (this.bookmarkedFilter === 'custom') matchBook = item.isCustom; 
 
                      const wordNum = item.id + 1;
                      const matchRange = (!startVal || wordNum >= startVal) && (!endVal || wordNum <= endVal);
@@ -3790,12 +3939,14 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
                      const displayW = item.w.replace(/</g, "&lt;").replace(/>/g, "&gt;");
                      const displayM = item.m.replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
+                     let displayId = item.isCustom ? `C-${item.customId}` : `No.${item.originalId || item.id + 1}`;
+
                      div.innerHTML = `
                          <div class="flex items-center gap-3 overflow-hidden w-full">
                              <div class="w-2 h-16 ${statusColor} rounded-full shrink-0 shadow-[0_0_8px_currentColor]"></div>
                              <div class="text-left overflow-hidden flex-grow py-1">
                                  <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                                     <span class="text-xs md:text-sm text-yellow-500 font-mono opacity-90">No.${item.id + 1}</span>
+                                     <span class="text-xs md:text-sm text-yellow-500 font-mono opacity-90">${displayId}</span>
                                      <span class="font-bold text-white text-2xl md:text-3xl f1-font tracking-wide leading-none">${displayW}</span>
                                      <span class="text-[10px] md:text-xs text-gray-400 font-mono border border-gray-600 px-1.5 py-0.5 rounded">${statusText}</span>
                                  </div>
@@ -3834,14 +3985,14 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
       } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
       const firebaseConfig = {
-    apiKey: "AIzaSyCoGNaogpzT-hgWiciDRBP2xLe0-2Kb6Qo",
-    authDomain: "target-bcfb8.firebaseapp.com",
-    projectId: "target-bcfb8",
-    storageBucket: "target-bcfb8.firebasestorage.app",
-    messagingSenderId: "484921334216",
-    appId: "1:484921334216:web:d68d3b7527c31a21ce48fd",
-    measurementId: "G-NQCC1W5B48"
-  };
+        apiKey: "AIzaSyCoGNaogpzT-hgWiciDRBP2xLe0-2Kb6Qo",
+        authDomain: "target-bcfb8.firebaseapp.com",
+        projectId: "target-bcfb8",
+        storageBucket: "target-bcfb8.firebasestorage.app",
+        messagingSenderId: "484921334216",
+        appId: "1:484921334216:web:d68d3b7527c31a21ce48fd",
+        measurementId: "G-NQCC1W5B48"
+      };
 
       const app = initializeApp(firebaseConfig);
       const auth = getAuth(app);
@@ -3849,6 +4000,28 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
       const db = initializeFirestore(app, {
           localCache: persistentLocalCache({ tabManager: undefined })
       });
+
+      window.saveCustomWordToFirestore = async (wordData) => {
+          if (!window.currentUser) return;
+          const userRef = doc(db, "users", window.currentUser.uid);
+          const customWordsRef = collection(userRef, "custom_words");
+          await addDoc(customWordsRef, wordData);
+      };
+
+      window.fetchCustomWords = async () => {
+          if (!window.currentUser) return [];
+          try {
+              const customWordsRef = collection(db, "users", window.currentUser.uid, "custom_words");
+              const q = query(customWordsRef, orderBy("timestamp", "desc"));
+              const snapshot = await getDocs(q);
+              const customWords = [];
+              snapshot.forEach(docSnap => customWords.push(docSnap.data()));
+              return customWords;
+          } catch (e) {
+              console.warn("Failed to load custom parts:", e);
+              return [];
+          }
+      };
 
       const gateScreen = document.getElementById('gate-screen');
       const startScreen = document.getElementById('start-screen');
@@ -3883,6 +4056,18 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
 
           try {
               await window.fetchSRSItems();
+
+              const customWords = await window.fetchCustomWords();
+              if (customWords && customWords.length > 0 && window.quiz) {
+                  const formattedCustomWords = customWords.map((cw, idx) => ({
+                      ...cw, 
+                      customId: customWords.length - idx, 
+                      isCustom: true
+                  }));
+                  window.quiz.masterList = [...formattedCustomWords, ...window.quiz.masterList];
+                  window.quiz.generateRounds();
+                  window.quiz.initUI();
+              }
               
               const userNameDisplay = document.getElementById('user-name');
               if(userNameDisplay) userNameDisplay.innerText = user.displayName || "RACING DRIVER";
@@ -3908,6 +4093,13 @@ zealous: 熱心な；熱狂的な｜a zealous supporter｜熱狂的な支持者
           gateScreen.classList.remove('hidden');
           loginStatus.innerText = "System Standby...";
         }
+      });
+
+      gateLoginBtn.addEventListener('click', async () => {
+        loginStatus.innerText = "Connecting to Paddock...";
+        const provider = new GoogleAuthProvider();
+        try { await signInWithPopup(auth, provider); } 
+        catch (error) { console.error(error); loginStatus.innerText = "Access Denied."; }
       });
 
       window.fetchSRSItems = async () => {
